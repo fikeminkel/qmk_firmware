@@ -1,0 +1,36 @@
+name: Build ALT keymap
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+    - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container: ghcr.io/qmk/qmk_cli
+
+    steps:
+    - name: Disable safe.directory check
+      run : git config --global --add safe.directory '*'
+
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install dependencies
+      run: pip3 install -r requirements.txt
+
+    - name: Build firmware
+      run: make massdrop/alt:fikeminkel
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: massdrop_alt_fikeminkel
+        path: massdrop_alt_fikeminkel.bin
+        if-no-files-found: error
