@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include <math.h>
 
 enum alt_keycodes {
     L_BRI = SAFE_RANGE, //LED Brightness Increase                                   //Working
@@ -324,3 +325,27 @@ led_instruction_t led_instructions[] = {
     //end must be set to 1 to indicate end of instruction set
      { .end = 1 }
 };
+
+// the mac layer's white slowly pulses between these two levels
+#define MAC_PULSE_MAX 230
+#define MAC_PULSE_MIN 160
+#define MAC_PULSE_PERIOD_MS 6000
+#define MAC_PULSE_UPDATE_MS 20
+
+void housekeeping_task_user(void) {
+    static uint32_t last_update;
+
+    if (timer_elapsed32(last_update) < MAC_PULSE_UPDATE_MS) return;
+    last_update = timer_read32();
+
+    float   phase = (float)(last_update % MAC_PULSE_PERIOD_MS) / MAC_PULSE_PERIOD_MS;
+    uint8_t level = MAC_PULSE_MIN + (MAC_PULSE_MAX - MAC_PULSE_MIN) * (1.0f + cosf(phase * 2.0f * M_PI)) / 2.0f;
+
+    for (led_instruction_t *instruction = led_instructions; !instruction->end; instruction++) {
+        if ((instruction->flags & LED_FLAG_MATCH_LAYER) && (instruction->flags & LED_FLAG_USE_RGB) && instruction->layer == 1) {
+            instruction->r = level;
+            instruction->g = level;
+            instruction->b = level;
+        }
+    }
+}
