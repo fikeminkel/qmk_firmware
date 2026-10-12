@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    include "led.h"
 #    include "rgb_matrix.h"
 #    include "eeprom.h"
+#    include "eeconfig.h"
+#    include "action_layer.h"
 #    include "host.h"
 #    include <string.h>
 #    include <math.h>
