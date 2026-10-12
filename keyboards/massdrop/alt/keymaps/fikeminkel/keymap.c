@@ -19,7 +19,8 @@ enum alt_keycodes {
     DBG_MTRX,           //DEBUG Toggle Matrix Prints                                //
     DBG_KBD,            //DEBUG Toggle Keyboard Prints                              //
     DBG_MOU,            //DEBUG Toggle Mouse Prints                                 //
-    MD_BOOT             //Restart into bootloader after hold timeout                //Working
+    MD_BOOT,            //Restart into bootloader after hold timeout                //Working
+    L_T_ANI             //LED Toggle Animation for the current base layer           //Working
 };
 
 // indexes into led_setups in tmk_core/protocol/arm_atsam/md_rgb_matrix_programs.c
@@ -65,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [4] = LAYOUT(
         KC_GRV,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______, KC_MUTE, \
         L_T_BR,  L_PSD,   L_BRI,   L_PSI,   _______, _______, _______, _______, U_T_AGCR,_______, KC_PSCR, KC_SCRL, KC_PAUS, _______, KC_END, \
-        L_T_PTD, L_PTP,   L_BRD,   L_PTN,   _______, _______, TO(2),   _______, _______, _______, _______, _______,          _______, KC_VOLU, \
+        L_T_PTD, L_PTP,   L_BRD,   L_PTN,   L_T_ANI, _______, TO(2),   _______, _______, _______, _______, _______,          _______, KC_VOLU, \
         _______, L_T_MD,  L_T_ONF, TO(3),   _______, MD_BOOT, NK_TOGG, _______, _______, _______, _______, _______,          KC_PGUP, KC_VOLD, \
         _______, TO(0),   TO(1),                              _______,                            _______, _______, KC_HOME, KC_PGDN, KC_END  \
     ),
@@ -80,44 +81,69 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     */
 };
 
-// the base layer (windows, mac, halloween or christmas) is remembered across power cycles
-// stored in the user eeprom word as layer + 1, so that a blank eeprom reads as "nothing saved"
+// the base layer (windows, mac, halloween or christmas) and which base layers have
+// their animation turned off are remembered across power cycles
+// stored in the user eeprom word: byte 0 is layer + 1, so that a blank eeprom reads as
+// "nothing saved", and byte 1 is a bitmask of the layers with animation off
 #define BASE_LAYER_MASK 0xF
 #define BASE_LAYER_DEFAULT 1
 
 static bool    base_layer_restored = false;
 static uint8_t base_layer_saved;
+static uint8_t animation_off_layers;
 
-void keyboard_post_init_user(void) {
-    uint32_t stored = eeconfig_read_user();
-
-    base_layer_saved    = (stored >= 1 && stored <= 4) ? stored - 1 : BASE_LAYER_DEFAULT;
-    base_layer_restored = true;
-    layer_move(base_layer_saved);
+static void save_settings(void) {
+    eeconfig_update_user((uint32_t)animation_off_layers << 8 | (base_layer_saved + 1));
 }
 
 // the halloween and christmas layers run their animation slower than the other layers
-#define SEASONAL_LAYER_MASK 0xC
+#define SEASONAL_LAYER_FIRST 2
 #define SEASONAL_ANIMATION_SPEED 2.0f
 
-layer_state_t layer_state_set_user(layer_state_t state) {
-    static bool  seasonal = false;
+// set the pattern speed for the current base layer, keeping the speed chosen with
+// the speed keys aside while a layer overrides it
+static void update_animation_speed(void) {
+    static bool  overridden = false;
     static float saved_speed;
 
-    if (((state & SEASONAL_LAYER_MASK) != 0) != seasonal) {
-        seasonal = !seasonal;
-        if (seasonal) {
-            saved_speed         = led_animation_speed;
-            led_animation_speed = SEASONAL_ANIMATION_SPEED;
-        } else {
-            led_animation_speed = saved_speed;
-        }
-    }
+    bool  off      = animation_off_layers & (1 << base_layer_saved);
+    bool  seasonal = base_layer_saved >= SEASONAL_LAYER_FIRST;
 
+    if (off || seasonal) {
+        if (!overridden) {
+            saved_speed = led_animation_speed;
+            overridden  = true;
+        }
+        led_animation_speed = off ? 0 : SEASONAL_ANIMATION_SPEED;
+    } else if (overridden) {
+        led_animation_speed = saved_speed;
+        overridden          = false;
+    }
+}
+
+void keyboard_post_init_user(void) {
+    uint32_t stored = eeconfig_read_user();
+    uint8_t  layer  = stored & 0xFF;
+
+    if (layer >= 1 && layer <= 4) {
+        base_layer_saved     = layer - 1;
+        animation_off_layers = (stored >> 8) & BASE_LAYER_MASK;
+    } else {
+        base_layer_saved     = BASE_LAYER_DEFAULT;
+        animation_off_layers = 0;
+    }
+    base_layer_restored = true;
+    layer_move(base_layer_saved);
+    update_animation_speed();
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
     uint8_t base_layer = get_highest_layer(state & BASE_LAYER_MASK);
+
     if (base_layer_restored && base_layer != base_layer_saved) {
         base_layer_saved = base_layer;
-        eeconfig_update_user(base_layer + 1);
+        save_settings();
+        update_animation_speed();
     }
     return state;
 }
@@ -231,6 +257,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 TOGGLE_FLAG_AND_PRINT(debug_mouse, "Debug mouse");
             }
             return false;
+        case L_T_ANI:
+            if (record->event.pressed) {
+                animation_off_layers ^= 1 << base_layer_saved;
+                save_settings();
+                update_animation_speed();
+            }
+            return false;
         case MD_BOOT:
             if (record->event.pressed) {
                 key_timer = timer_read32();
@@ -338,8 +371,11 @@ void housekeeping_task_user(void) {
     if (timer_elapsed32(last_update) < MAC_PULSE_UPDATE_MS) return;
     last_update = timer_read32();
 
-    float   phase = (float)(last_update % MAC_PULSE_PERIOD_MS) / MAC_PULSE_PERIOD_MS;
-    uint8_t level = MAC_PULSE_MIN + (MAC_PULSE_MAX - MAC_PULSE_MIN) * (1.0f + cosf(phase * 2.0f * M_PI)) / 2.0f;
+    uint8_t level = MAC_PULSE_MAX;
+    if (!(animation_off_layers & (1 << 1))) {
+        float phase = (float)(last_update % MAC_PULSE_PERIOD_MS) / MAC_PULSE_PERIOD_MS;
+        level       = MAC_PULSE_MIN + (MAC_PULSE_MAX - MAC_PULSE_MIN) * (1.0f + cosf(phase * 2.0f * M_PI)) / 2.0f;
+    }
 
     for (led_instruction_t *instruction = led_instructions; !instruction->end; instruction++) {
         if ((instruction->flags & LED_FLAG_MATCH_LAYER) && (instruction->flags & LED_FLAG_USE_RGB) && instruction->layer == 1) {
