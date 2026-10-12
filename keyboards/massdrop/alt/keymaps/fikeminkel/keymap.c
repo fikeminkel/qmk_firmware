@@ -24,6 +24,8 @@ enum alt_keycodes {
 // indexes into led_setups in tmk_core/protocol/arm_atsam/md_rgb_matrix_programs.c
 #define LED_PATTERN_JACK_O_LANTERN 11
 #define LED_PATTERN_JACK_O_LANTERN_EDGE 12
+#define LED_PATTERN_CHRISTMAS 13
+#define LED_PATTERN_CHRISTMAS_EDGE 14
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // windows is layer 0
@@ -32,7 +34,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_HOME, \
         KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGUP, \
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_PGDN, \
-        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(3),   KC_LEFT, KC_DOWN, KC_RGHT  \
+        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(4),   KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
     // mac is layer 1
     [1] = LAYOUT(
@@ -40,7 +42,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_HOME, \
         KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGUP, \
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_PGDN, \
-        KC_LCTL, KC_LALT, KC_LGUI,                            KC_SPC,                             KC_RGUI, MO(3),   KC_LEFT, KC_DOWN, KC_RGHT  \
+        KC_LCTL, KC_LALT, KC_LGUI,                            KC_SPC,                             KC_RGUI, MO(4),   KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
     // mac halloween is layer 2
     [2] = LAYOUT(
@@ -48,14 +50,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_HOME, \
         KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGUP, \
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_PGDN, \
-        KC_LCTL, KC_LALT, KC_LGUI,                            KC_SPC,                             KC_RGUI, MO(3),   KC_LEFT, KC_DOWN, KC_RGHT  \
+        KC_LCTL, KC_LALT, KC_LGUI,                            KC_SPC,                             KC_RGUI, MO(4),   KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
-    // func is layer 3
+    // mac christmas is layer 3
     [3] = LAYOUT(
+        KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_HOME, \
+        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGUP, \
+        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_PGDN, \
+        KC_LCTL, KC_LALT, KC_LGUI,                            KC_SPC,                             KC_RGUI, MO(4),   KC_LEFT, KC_DOWN, KC_RGHT  \
+    ),
+    // func is layer 4
+    [4] = LAYOUT(
         KC_GRV,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______, KC_MUTE, \
         L_T_BR,  L_PSD,   L_BRI,   L_PSI,   _______, _______, _______, _______, U_T_AGCR,_______, KC_PSCR, KC_SCRL, KC_PAUS, _______, KC_END, \
         L_T_PTD, L_PTP,   L_BRD,   L_PTN,   _______, _______, TO(2),   _______, _______, _______, _______, _______,          _______, KC_VOLU, \
-        _______, L_T_MD,  L_T_ONF, _______, _______, MD_BOOT, NK_TOGG, _______, _______, _______, _______, _______,          KC_PGUP, KC_VOLD, \
+        _______, L_T_MD,  L_T_ONF, TO(3),   _______, MD_BOOT, NK_TOGG, _______, _______, _______, _______, _______,          KC_PGUP, KC_VOLD, \
         _______, TO(0),   TO(1),                              _______,                            _______, _______, KC_HOME, KC_PGDN, KC_END  \
     ),
     /*
@@ -69,9 +79,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     */
 };
 
-// the base layer (windows, mac or halloween) is remembered across power cycles
+// the base layer (windows, mac, halloween or christmas) is remembered across power cycles
 // stored in the user eeprom word as layer + 1, so that a blank eeprom reads as "nothing saved"
-#define BASE_LAYER_MASK 0x7
+#define BASE_LAYER_MASK 0xF
 #define BASE_LAYER_DEFAULT 1
 
 static bool    base_layer_restored = false;
@@ -80,23 +90,24 @@ static uint8_t base_layer_saved;
 void keyboard_post_init_user(void) {
     uint32_t stored = eeconfig_read_user();
 
-    base_layer_saved    = (stored >= 1 && stored <= 3) ? stored - 1 : BASE_LAYER_DEFAULT;
+    base_layer_saved    = (stored >= 1 && stored <= 4) ? stored - 1 : BASE_LAYER_DEFAULT;
     base_layer_restored = true;
     layer_move(base_layer_saved);
 }
 
-// the halloween layer runs its animation slower than the other layers
-#define HALLOWEEN_ANIMATION_SPEED 2.0f
+// the halloween and christmas layers run their animation slower than the other layers
+#define SEASONAL_LAYER_MASK 0xC
+#define SEASONAL_ANIMATION_SPEED 2.0f
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    static bool  halloween = false;
+    static bool  seasonal = false;
     static float saved_speed;
 
-    if (layer_state_cmp(state, 2) != halloween) {
-        halloween = !halloween;
-        if (halloween) {
+    if (((state & SEASONAL_LAYER_MASK) != 0) != seasonal) {
+        seasonal = !seasonal;
+        if (seasonal) {
             saved_speed         = led_animation_speed;
-            led_animation_speed = HALLOWEEN_ANIMATION_SPEED;
+            led_animation_speed = SEASONAL_ANIMATION_SPEED;
         } else {
             led_animation_speed = saved_speed;
         }
@@ -249,16 +260,23 @@ led_instruction_t led_instructions[] = {
     // edge for mac halloween layer
     { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_PATTERN, .id2 = 0xFFFFFFF8, .id3 = 0x000003FF, .pattern_id = LED_PATTERN_JACK_O_LANTERN_EDGE, .layer = 2 },
 
+    // keys for mac christmas layer
+    { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_PATTERN, .id0 = 0xFFFFFFFF, .id1 = 0xFFFFFFFF, .id2 = 0x00000007, .pattern_id = LED_PATTERN_CHRISTMAS, .layer = 3 },
+    // edge for mac christmas layer
+    { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_PATTERN, .id2 = 0xFFFFFFF8, .id3 = 0x000003FF, .pattern_id = LED_PATTERN_CHRISTMAS_EDGE, .layer = 3 },
+
     // (id1  64 -  33: 0000 0010 0000 0000 0000 1000 0000 0000 = 0x02000800) = Page Up/Down Keys
-    { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 0x02000800, .r = 127, .g = 227, .b = 200, .layer = 3 },
+    { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 0x02000800, .r = 127, .g = 227, .b = 200, .layer = 4 },
     // (id1  64 -  33: 0000 1000 0000 0000 0000 0000 0000 0000 = 0x08000000) = Windows Key
-    { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id1 = 0x08000000, .layer = 3 },
+    { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id1 = 0x08000000, .layer = 4 },
     // (id1  64 -  33: 0001 0000 0000 0000 0000 0000 0000 0000 = 0x10000000) = Left Alt Key
-    { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 0x10000000, .r = 230, .g = 230, .b = 230, .layer = 3 },
+    { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 0x10000000, .r = 230, .g = 230, .b = 230, .layer = 4 },
     // (id1  64 -  33: 0000 0000 0000 0000 0000 0000 0001 0000 = 0x00000010) = H Key
-    { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_PATTERN, .id1 = 0x00000010, .pattern_id = LED_PATTERN_JACK_O_LANTERN, .layer = 3 },
+    { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_PATTERN, .id1 = 0x00000010, .pattern_id = LED_PATTERN_JACK_O_LANTERN, .layer = 4 },
+    // (id1  64 -  33: 0000 0000 0000 0000 1000 0000 0000 0000 = 0x00008000) = C Key
+    { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_PATTERN, .id1 = 0x00008000, .pattern_id = LED_PATTERN_CHRISTMAS, .layer = 4 },
     // edge for function layer
-    { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id2 = 0xFFFFFFF8, .id3 = 0x000003FF, .r = 230, .g = 230, .b = 230, .layer = 3 },
+    { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id2 = 0xFFFFFFF8, .id3 = 0x000003FF, .r = 230, .g = 230, .b = 230, .layer = 4 },
 
     // only light up some keys on function layer
     //{ .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 0xFF, .id1 = 0x00FF, .id2 = 0x0000FF00, .id3 = 0xFF000000, .r = 230, .g = 230, .b = 230, .layer = 2 },

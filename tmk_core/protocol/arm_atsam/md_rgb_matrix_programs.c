@@ -110,11 +110,37 @@ led_setup_t leds_jack_o_lantern_edge[] = {
     {.end = 1},
 };
 
+// Christmas: red and green stripes, scrolling
+led_setup_t leds_christmas[] = {
+    {.hs = 0, .he = 20, .rs = 220, .re = 220, .gs = 0, .ge = 0, .bs = 10, .be = 10, .ef = EF_OVER | EF_SCR_R},
+    {.hs = 20, .he = 25, .rs = 220, .re = 0, .gs = 0, .ge = 150, .bs = 10, .be = 10, .ef = EF_OVER | EF_SCR_R},
+    {.hs = 25, .he = 45, .rs = 0, .re = 0, .gs = 150, .ge = 150, .bs = 10, .be = 10, .ef = EF_OVER | EF_SCR_R},
+    {.hs = 45, .he = 50, .rs = 0, .re = 220, .gs = 150, .ge = 0, .bs = 10, .be = 10, .ef = EF_OVER | EF_SCR_R},
+    {.hs = 50, .he = 70, .rs = 220, .re = 220, .gs = 0, .ge = 0, .bs = 10, .be = 10, .ef = EF_OVER | EF_SCR_R},
+    {.hs = 70, .he = 75, .rs = 220, .re = 0, .gs = 0, .ge = 150, .bs = 10, .be = 10, .ef = EF_OVER | EF_SCR_R},
+    {.hs = 75, .he = 95, .rs = 0, .re = 0, .gs = 150, .ge = 150, .bs = 10, .be = 10, .ef = EF_OVER | EF_SCR_R},
+    {.hs = 95, .he = 100, .rs = 0, .re = 220, .gs = 150, .ge = 0, .bs = 10, .be = 10, .ef = EF_OVER | EF_SCR_R},
+    {.end = 1},
+};
+
+// Christmas edge: candy cane red and white stripes, scrolling the opposite way
+led_setup_t leds_christmas_edge[] = {
+    {.hs = 0, .he = 20, .rs = 230, .re = 230, .gs = 0, .ge = 0, .bs = 0, .be = 0, .ef = EF_OVER | EF_SCR_L},
+    {.hs = 20, .he = 25, .rs = 230, .re = 200, .gs = 0, .ge = 200, .bs = 0, .be = 200, .ef = EF_OVER | EF_SCR_L},
+    {.hs = 25, .he = 45, .rs = 200, .re = 200, .gs = 200, .ge = 200, .bs = 200, .be = 200, .ef = EF_OVER | EF_SCR_L},
+    {.hs = 45, .he = 50, .rs = 200, .re = 230, .gs = 200, .ge = 0, .bs = 200, .be = 0, .ef = EF_OVER | EF_SCR_L},
+    {.hs = 50, .he = 70, .rs = 230, .re = 230, .gs = 0, .ge = 0, .bs = 0, .be = 0, .ef = EF_OVER | EF_SCR_L},
+    {.hs = 70, .he = 75, .rs = 230, .re = 200, .gs = 0, .ge = 200, .bs = 0, .be = 200, .ef = EF_OVER | EF_SCR_L},
+    {.hs = 75, .he = 95, .rs = 200, .re = 200, .gs = 200, .ge = 200, .bs = 200, .be = 200, .ef = EF_OVER | EF_SCR_L},
+    {.hs = 95, .he = 100, .rs = 200, .re = 230, .gs = 200, .ge = 0, .bs = 200, .be = 0, .ef = EF_OVER | EF_SCR_L},
+    {.end = 1},
+};
+
 // Add new LED animations here using one from above as example
 // The last entry must be { .end = 1 }
 // Add the new animation name to the list below following its format
 
-void *led_setups[] = {leds_rainbow_s, leds_rainbow_ns, leds_teal_salmon, leds_yellow, leds_red, leds_green, leds_blue, leds_white, leds_white_with_red_stripe, leds_black_with_red_stripe, leds_off, leds_jack_o_lantern, leds_jack_o_lantern_edge};
+void *led_setups[] = {leds_rainbow_s, leds_rainbow_ns, leds_teal_salmon, leds_yellow, leds_red, leds_green, leds_blue, leds_white, leds_white_with_red_stripe, leds_black_with_red_stripe, leds_off, leds_jack_o_lantern, leds_jack_o_lantern_edge, leds_christmas, leds_christmas_edge};
 
 const uint8_t led_setups_count = ARRAY_SIZE(led_setups);
 
