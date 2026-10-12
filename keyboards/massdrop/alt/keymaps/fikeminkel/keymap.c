@@ -69,9 +69,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     */
 };
 
-// start on the mac layer
+// the base layer (windows, mac or halloween) is remembered across power cycles
+// stored in the user eeprom word as layer + 1, so that a blank eeprom reads as "nothing saved"
+#define BASE_LAYER_MASK 0x7
+#define BASE_LAYER_DEFAULT 1
+
+static bool    base_layer_restored = false;
+static uint8_t base_layer_saved;
+
 void keyboard_post_init_user(void) {
-    layer_move(1);
+    uint32_t stored = eeconfig_read_user();
+
+    base_layer_saved    = (stored >= 1 && stored <= 3) ? stored - 1 : BASE_LAYER_DEFAULT;
+    base_layer_restored = true;
+    layer_move(base_layer_saved);
 }
 
 // the halloween layer runs its animation slower than the other layers
@@ -89,6 +100,12 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         } else {
             led_animation_speed = saved_speed;
         }
+    }
+
+    uint8_t base_layer = get_highest_layer(state & BASE_LAYER_MASK);
+    if (base_layer_restored && base_layer != base_layer_saved) {
+        base_layer_saved = base_layer;
+        eeconfig_update_user(base_layer + 1);
     }
     return state;
 }
