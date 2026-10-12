@@ -90,11 +90,31 @@ led_setup_t leds_rainbow_s[] = {
     {.hs = 0, .he = 16.67, .rs = 255, .re = 255, .gs = 0, .ge = 255, .bs = 0, .be = 0, .ef = EF_OVER | EF_SCR_R}, {.hs = 16.67, .he = 33.33, .rs = 255, .re = 0, .gs = 255, .ge = 255, .bs = 0, .be = 0, .ef = EF_OVER | EF_SCR_R}, {.hs = 33.33, .he = 50, .rs = 0, .re = 0, .gs = 255, .ge = 255, .bs = 0, .be = 255, .ef = EF_OVER | EF_SCR_R}, {.hs = 50, .he = 66.67, .rs = 0, .re = 0, .gs = 255, .ge = 0, .bs = 255, .be = 255, .ef = EF_OVER | EF_SCR_R}, {.hs = 66.67, .he = 83.33, .rs = 0, .re = 255, .gs = 0, .ge = 0, .bs = 255, .be = 255, .ef = EF_OVER | EF_SCR_R}, {.hs = 83.33, .he = 100, .rs = 255, .re = 255, .gs = 0, .ge = 0, .bs = 255, .be = 0, .ef = EF_OVER | EF_SCR_R}, {.end = 1},
 };
 
+// Jack-o'-lantern: dim ember with a moving orange/yellow stripe
+led_setup_t leds_jack_o_lantern[] = {
+    {.hs = 0, .he = 100, .rs = 20, .re = 20, .gs = 4, .ge = 4, .bs = 0, .be = 0, .ef = EF_NONE},
+    {.hs = 0, .he = 10, .rs = 20, .re = 255, .gs = 4, .ge = 60, .bs = 0, .be = 0, .ef = EF_OVER | EF_SCR_R},
+    {.hs = 10, .he = 17, .rs = 255, .re = 255, .gs = 60, .ge = 170, .bs = 0, .be = 0, .ef = EF_OVER | EF_SCR_R},
+    {.hs = 17, .he = 24, .rs = 255, .re = 255, .gs = 170, .ge = 60, .bs = 0, .be = 0, .ef = EF_OVER | EF_SCR_R},
+    {.hs = 24, .he = 34, .rs = 255, .re = 20, .gs = 60, .ge = 4, .bs = 0, .be = 0, .ef = EF_OVER | EF_SCR_R},
+    {.end = 1},
+};
+
+// Jack-o'-lantern edge: orange glow with a stripe moving the opposite way
+led_setup_t leds_jack_o_lantern_edge[] = {
+    {.hs = 0, .he = 100, .rs = 90, .re = 90, .gs = 18, .ge = 18, .bs = 0, .be = 0, .ef = EF_NONE},
+    {.hs = 0, .he = 12, .rs = 90, .re = 255, .gs = 18, .ge = 70, .bs = 0, .be = 0, .ef = EF_OVER | EF_SCR_L},
+    {.hs = 12, .he = 20, .rs = 255, .re = 255, .gs = 70, .ge = 170, .bs = 0, .be = 0, .ef = EF_OVER | EF_SCR_L},
+    {.hs = 20, .he = 28, .rs = 255, .re = 255, .gs = 170, .ge = 70, .bs = 0, .be = 0, .ef = EF_OVER | EF_SCR_L},
+    {.hs = 28, .he = 40, .rs = 255, .re = 90, .gs = 70, .ge = 18, .bs = 0, .be = 0, .ef = EF_OVER | EF_SCR_L},
+    {.end = 1},
+};
+
 // Add new LED animations here using one from above as example
 // The last entry must be { .end = 1 }
 // Add the new animation name to the list below following its format
 
-void *led_setups[] = {leds_rainbow_s, leds_rainbow_ns, leds_teal_salmon, leds_yellow, leds_red, leds_green, leds_blue, leds_white, leds_white_with_red_stripe, leds_black_with_red_stripe, leds_off};
+void *led_setups[] = {leds_rainbow_s, leds_rainbow_ns, leds_teal_salmon, leds_yellow, leds_red, leds_green, leds_blue, leds_white, leds_white_with_red_stripe, leds_black_with_red_stripe, leds_off, leds_jack_o_lantern, leds_jack_o_lantern_edge};
 
 const uint8_t led_setups_count = ARRAY_SIZE(led_setups);
 
